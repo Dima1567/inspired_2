@@ -35,7 +35,6 @@ button {
     background-color: transparent;
     border: none;
     color: inherit
-    
 }
 
 a {
@@ -80,6 +79,16 @@ iframe {
 в итоге 1240px
 Чтобы контент не прижимался к краям экрана
 */
+
+main {
+    margin-bottom: 120px;
+
+    @include tablet {
+    margin-bottom: 80px;    }
+
+    @include mobile {
+    margin-bottom: 60px;    }
+}
 
 .container {
     --max-width: 1180px;
