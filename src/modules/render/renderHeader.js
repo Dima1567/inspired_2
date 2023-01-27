@@ -1,4 +1,5 @@
-import { createElement } from "../createElement"; 
+import { createElement } from "../createElement";
+import logo from '../../img/logo.svg'
 
 export const searchButton = createElement('button', {
     className: 'header__link',
@@ -38,22 +39,48 @@ const container = createElement('div', {
     innerHTML: `
         <a a href = "tel:+375(25)783-32-88" class="header__phone header__link" > +375(25) 783 - 32 - 88</a >
         
-        <img class="header__logo" src="/src/img/logo.svg" alt="Логотип Inspired">
+        <img class="header__logo" src="${logo}" alt="Логотип Inspired">
     `
 });
 
-const nav = createElement('div', {
-    className: 'header__navigation'
-}, {
-    parent: container,
-});
+const nav = createElement('div',
+    {
+        className: 'header__navigation'
+    },
+    {
+        parent: container,
+    });
 
-createElement('ul', {
-    className: 'header__nav-list',
-}, {
-    parent: nav,
-    append: [searchButton, cartLink, favoriteLink]
-});
+createElement('ul',
+    {
+        className: 'header__nav-list',
+    },
+    {
+        parent: nav,
+        appends: [
+            createElement('li', {
+                className: 'header__nav-item'
+            },
+                {
+                    append: searchButton,
+                }),
+
+            createElement('li', {
+                className: 'header__nav-item'
+            },
+                {
+                    append: cartLink,
+                }),
+
+            createElement('li', {
+                className: 'header__nav-item'
+            },
+                {
+                    append: favoriteLink,
+                }),
+        ]
+    }
+);
 
 
 export const renderHeader = () => {
