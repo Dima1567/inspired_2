@@ -38,10 +38,20 @@ const container = createElement('div', {
     className: 'container header__container',
     innerHTML: `
         <a a href = "tel:+375(25)783-32-88" class="header__phone header__link" > +375(25) 783 - 32 - 88</a >
-        
-        <img class="header__logo" src="${logo}" alt="Логотип Inspired">
     `
 });
+
+createElement(
+    'a',
+    {
+        className: 'header__logo',
+        href: '/',
+        innerHTML: `<img src="${logo}" alt="Логотип Inspired">`
+    },
+    {
+        parent: container
+    },
+);
 
 const nav = createElement('div',
     {
@@ -85,6 +95,5 @@ createElement('ul',
 
 export const renderHeader = () => {
     const header = document.querySelector('.header');
-
     header.append(container)
 }
