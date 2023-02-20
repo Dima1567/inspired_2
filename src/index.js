@@ -3,14 +3,14 @@ import './index.scss';
 
 import { renderHeader } from './modules/render/renderHeader';
 import { renderFooter } from './modules/render/renderFooter';
-import { mainPage } from './modules/mainPage/mainPage';
-import { router } from './modules/router';
-import { menMainPage } from './modules/mainPage/menMainPage';
-import { WomenMainPage } from './modules/mainPage/womenMainPage';
+import { mainPageController } from './modules/controllers/mainPageController';
+import { router } from './modules/utils/router';
 import { getData } from './modules/getData';
 import { API_URL, DATA } from './modules/const';
 import { createCssColors } from './modules/createCssColors';
-import { createElement } from './modules/createElement';
+import { createElement } from './modules/utils/createElement';
+import { categoryPageController } from './modules/controllers/categoryPageController';
+import { searchPageController } from './modules/controllers/searchController';
 
 
 
@@ -27,16 +27,20 @@ const init = async () => {
         createCssColors(DATA.colors)
 
         router.on('/', () => {
-            mainPage()
+            mainPageController()
         });
 
         router.on('women', () => {
-            WomenMainPage()
+            mainPageController('women')
         });
 
         router.on('men', () => {
-            menMainPage()
+            mainPageController('men')
         });
+
+        router.on('/:gender/:category', (categoryPageController));
+
+        router.on('search', searchPageController);
 
 
         // setTimeout(() => {
@@ -49,14 +53,15 @@ const init = async () => {
 
 
     } catch (e) {
+        console.warn(e)
         createElement(
-            'h2', 
+            'h2',
             {
                 textContent: 'Что-то пошло не так, попробуйте позже...'
             },
             {
                 parent: document.querySelector('main'),
-                cb(h2){
+                cb(h2) {
                     h2.style.textAlign = 'center'
                 }
             },

@@ -1,9 +1,31 @@
 import { DATA } from "../const";
-import { createElement } from "../createElement";
+import { createElement } from "../utils/createElement";
 
 
-export const renderNavigation = (gender) => {
+let flag = false;
+let oldGender = ''
+
+export const renderNavigation = (gender, category) => {
   const navigation = document.querySelector('.navigation');
+
+
+  if (!gender) {
+    navigation.style.dispay = 'none';
+  } else {
+    navigation.style.dispay = '';
+  }
+
+
+  if (flag && oldGender === gender) {
+    return;
+  }
+
+  if (gender === 'all') {
+    gender = oldGender
+  }
+  oldGender = gender;
+
+  flag = true;
 
   navigation.textContent = '';
 
@@ -57,11 +79,14 @@ export const renderNavigation = (gender) => {
         className: 'category__item',
       },
       {
-        append: createElement('a', {
-          className: 'category__link',
-          textContent: item.title,
-          href: `#/${gender}/${item.slug}`,
-        },
+        append: createElement(
+          'a',
+          {
+            className: `category__link 
+              ${category === item.slug ? 'category__link_active' : ''}`,
+            textContent: item.title,
+            href: `#/${gender}/${item.slug}`,
+          },
           {
             cb(elem) {
               elem.addEventListener('click', () => {
@@ -75,7 +100,7 @@ export const renderNavigation = (gender) => {
     )
   )
 
-  
+
   const categoryList = createElement('ul',
     {
       className: 'navigation__category category',

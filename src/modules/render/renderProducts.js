@@ -1,6 +1,7 @@
-import { API_URL, DATA } from "../const";
-import { createElement } from "../createElement";
+import { API_URL, COUNT_PAGINATION, DATA } from "../const";
+import { createElement } from "../utils/createElement";
 import { getData } from "../getData";
+import { renderPagination } from "./renderPagination";
 
 
 
@@ -10,7 +11,9 @@ export const renderProducts = async (title, params) => {
 
   products.textContent = '';
 
-  const goods = await getData(`${API_URL}/api/goods`, params);
+  const data = await getData(`${API_URL}/api/goods`, params);
+
+  const goods = Array.isArray(data) ? data : data.goods
 
   const container = createElement(
     'div',
@@ -32,35 +35,38 @@ export const renderProducts = async (title, params) => {
     }
   );
 
-  const listCard = goods.map(product => {
-    console.log(product)
-    const li = createElement('li',
+  const listCard = goods.map((product) => {
+    const li = createElement('li', {
+      className: 'goods__item',
+    });
+
+    const article = createElement('article',
       {
-        className: 'goods__item',
-      });
+        className: 'product',
+        innerHTML: `
+        <a href="#/product/${product.id}" class="product__link">
+          <img 
+            src="${API_URL}/${product.pic}"
+            alt="${product.title}"
+            class="product__image">
+          <h3 class="product__title">${product.title}</h3>
+        </a>
 
-    const article = createElement('article', {
-      className: 'product',
-      innerHTML: `
-            <a href="#/product/${product.id}" class="product__link">
-              <img 
-                src="${API_URL}/${product.pic}" 
-                alt="${product.title}"
-                class="product__image">
-              <h3 class="product__title">${product.title}</h3>
-            </a>
-            <div class="product__row">
-              <p class="product__price">руб ${product.price}</p>
+        <div class="product__row">
+          <p class="product__price">руб ${product.price}</p>
 
-              <button class="product__btn-favotite product__btn-favotite"
-                aria-label="Добавить в избранное" data-id=${product.id}></button>
-            </div>
-        `
-    },
+          <button 
+            class="product__btn-favorite" 
+            label="добавить в избранное"
+            data-id=${product.id}>
+            </button>
+        </div>
+      `,
+      },
       {
         parent: li,
-      }
-    )
+      },
+    );
 
     createElement('ul',
       {
@@ -83,7 +89,7 @@ export const renderProducts = async (title, params) => {
   });
 
 
-  const list = createElement('ul',
+  createElement('ul',
     {
       className: 'goods__list'
     },
@@ -93,4 +99,14 @@ export const renderProducts = async (title, params) => {
     },
   );
 
-}
+  if (data.pages && data.pages > 1) {
+    const pagination = createElement(
+      'div',
+      { className: 'goods__pagination pagination' },
+      { parent: container },
+    );
+
+    renderPagination(pagination, data.page, data.pages, COUNT_PAGINATION)
+  }
+
+};
